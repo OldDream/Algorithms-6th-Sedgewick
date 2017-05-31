@@ -4,12 +4,12 @@ import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.In;
 
 // exercise 4-1-3
-public class Graph {
+public class MyGraph {
     private final int V; // number of vertices
     private int E; // number of edges
     private Bag<Integer>[] adj; // adjacency lists
 
-    public Graph(int V) {
+    public MyGraph(int V) {
         this.V = V;
         this.E = 0;
         adj = (Bag<Integer>[]) new Bag[V]; // Create array of lists.
@@ -17,7 +17,7 @@ public class Graph {
             adj[v] = new Bag<Integer>(); // to empty.
     }
 
-    public Graph(In in) {
+    public MyGraph(In in) {
         this(in.readInt()); // Read V and construct this graph.
         this.E = in.readInt(); // Read E.
         for (int i = 0; i < E; i++) { // Add an edge.
@@ -27,7 +27,7 @@ public class Graph {
         }
     }
 
-    public Graph(Graph g) {
+    public MyGraph(MyGraph g) {
         this.V = g.V();
         this.E = g.E();
         adj = (Bag<Integer>[]) new Bag[V];

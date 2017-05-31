@@ -1,5 +1,7 @@
 package exercise4_1;
 
+import edu.princeton.cs.algs4.Graph;
+
 public class GraphProperties {
     private boolean[] marked;
     private int count;

@@ -1,6 +1,7 @@
 package exercise4_1;
 
 import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.Stack;
 
 public class BreadthFirstPaths {
@@ -14,6 +15,8 @@ public class BreadthFirstPaths {
         this.s = s;
         bfs(G, s);
     }
+    
+    
 
     private void bfs(Graph G, int s) {
         Queue<Integer> queue = new Queue<Integer>();

@@ -1,6 +1,7 @@
 package exercise4_1;
 
 import edu.princeton.cs.algs4.Bag;
+import edu.princeton.cs.algs4.Graph;
 
 // find all connected components from a graph
 public class CCFinder {
@@ -24,14 +25,19 @@ public class CCFinder {
         
         cc = (Bag<Integer>[]) new Bag[ccCounter];
         for (int i = 0; i < ccState.length; i++) {
+            cc[i] = new Bag<Integer>();
+        }
+        for (int i = 0; i < ccState.length; i++) {
             cc[ccState[i]].add(i);
         }
     }
 
     private void dfs(Graph g, int v) {
         for (int w : g.adj(v)) {
-            ccState[w] = ccCounter;
-            dfs(g, w);
+            if (ccState[w] == -1) {
+                ccState[w] = ccCounter;
+                dfs(g, w); 
+            }
         }
     }
     
