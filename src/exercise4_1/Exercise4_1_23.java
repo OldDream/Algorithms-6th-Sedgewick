@@ -5,11 +5,11 @@ import edu.princeton.cs.algs4.Graph;
 import edu.princeton.cs.algs4.StdOut;
 
 // http://algs4.cs.princeton.edu/41graph/movies.txt
+// small http://introcs.cs.princeton.edu/java/data/movies-hero.txt
 public class Exercise4_1_23 {
 
     public static void main(String[] args) {
         SymbolGraph sg = new SymbolGraph(args[0], "/");
-        StdOut.println("TEST ------ sg is ok.");
         Graph g = sg.graph();
 
         // 计算联通分量的数量
@@ -31,5 +31,12 @@ public class Exercise4_1_23 {
             StdOut.println("The center of the largest CC is : " + gp.center());
         else
             StdOut.println("The center of the largest CC does not exist.");
+        // is Kevin in the max CC ?
+        int indexOfKevin = sg.indexOf("Kevin Bacon");    // find the corresponding int of Kevin Bacon
+        if (ccf.maxCCcontains(indexOfKevin))
+            StdOut.println("Kevin Bacon is in the largest CC.");
+        else
+            StdOut.println("Kevin Bacon is not in the largest CC.");
+        
     }
 }

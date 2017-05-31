@@ -24,10 +24,10 @@ public class CCFinder {
         }
         
         cc = (Bag<Integer>[]) new Bag[ccCounter];
-        for (int i = 0; i < ccState.length; i++) {
+        for (int i = 0; i < cc.length; i++) {
             cc[i] = new Bag<Integer>();
         }
-        for (int i = 0; i < ccState.length; i++) {
+        for (int i = 0; i < cc.length; i++) {
             cc[ccState[i]].add(i);
         }
     }
@@ -63,5 +63,19 @@ public class CCFinder {
         }
         
         return source;
+    }
+    
+    //does the max CC contains v ?
+    public boolean maxCCcontains(int v) {
+        int indexOfCC = 0;    // the index of maxCC in cc.
+        for (int i = 1; i < cc.length; i++) {
+            if (cc[indexOfCC].size() < cc[i].size()) 
+                indexOfCC = i;
+        }
+        for (int i : cc[indexOfCC]) {
+            if (i == v)
+                return true;
+        }
+        return false;
     }
 }
