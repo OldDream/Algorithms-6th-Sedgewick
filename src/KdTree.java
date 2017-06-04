@@ -6,6 +6,11 @@ public class KdTree {
     private Node root = null;
     private int count;
 
+    private boolean doubleEquals(double a, double b) {
+        double EPSILON = 0.000001;
+        return (Math.abs(a - b) < EPSILON);
+    }
+
     private class Node {
         private Point2D pointHere = null;
         private Node left = null, right = null;
@@ -109,7 +114,7 @@ public class KdTree {
                     left = true;
                 }
                 else if (next.getCompare() && p.x() >= next.getPoint().x()) {
-                    if (p.y() == next.getPoint().y() && p.x() == next.getPoint().x())    // Check if father equals to p
+                    if (doubleEquals(p.y(), next.getPoint().y()) && doubleEquals(p.x(), next.getPoint().x()))    // Check if father equals to p
                         return;
                     // go to right side
                     father = next;
@@ -123,7 +128,7 @@ public class KdTree {
                     left = true;
                 }
                 else {
-                    if (p.x() == next.getPoint().x() && p.y() == next.getPoint().y())    // Check if father equals to p
+                    if (doubleEquals(p.y(), next.getPoint().y()) && doubleEquals(p.x(), next.getPoint().x()))    // Check if father equals to p
                         return;
                     // go to upper side
                     father = next;
@@ -157,7 +162,7 @@ public class KdTree {
                     next = next.getLeftChild();
                 }
                 else if (next.getCompare() && p.x() >= next.getPoint().x()) {
-                    if (p.y() == next.getPoint().y() && p.x() == next.getPoint().x())    // Check if father equals to p
+                    if (doubleEquals(p.y(), next.getPoint().y()) && doubleEquals(p.x(), next.getPoint().x()))    // Check if father equals to p
                         return true;
                     // go to right side
                     father = next;
@@ -169,7 +174,7 @@ public class KdTree {
                     next = next.getLeftChild();
                 }
                 else {
-                    if (p.y() == next.getPoint().y() && p.x() == next.getPoint().x())    // Check if father equals to p
+                    if (doubleEquals(p.y(), next.getPoint().y()) && doubleEquals(p.x(), next.getPoint().x()))    // Check if father equals to p
                         return true;
                     // go to upper side
                     father = next;
@@ -232,12 +237,13 @@ public class KdTree {
         // Left first or Right first
         boolean leftFirst = true;
         double nLeftRectDist = 0.0, nRightRectDist = 0.0;
-        
+
         if (n.getLeftChild() == null)
             leftFirst = false;
         else if (n.getRightChild() == null)
             ;
-        else if ((nLeftRectDist = n.getLeftChild().getRect().distanceSquaredTo(p)) > (nRightRectDist = n.getRightChild().getRect().distanceSquaredTo(p)))
+        else if ((nLeftRectDist = n.getLeftChild().getRect().distanceSquaredTo(p)) > (nRightRectDist = n.getRightChild()
+                .getRect().distanceSquaredTo(p)))
             leftFirst = false;
         else
             ;
