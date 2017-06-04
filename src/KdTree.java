@@ -252,7 +252,7 @@ public class KdTree {
             if (nLeftRectDist <= distance) {
                 nearstP = nearst(n.getLeftChild(), p, nearstP);
                 double tempDistance = nearstP.distanceSquaredTo(p);
-                if (distance > tempDistance)    // check if we can got a shortter distance.
+                if (distance > tempDistance)    // check if we can got a shorter distance.
                     distance = tempDistance;
 
                 // search right subtree
