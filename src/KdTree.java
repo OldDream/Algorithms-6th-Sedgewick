@@ -6,6 +6,11 @@ public class KdTree {
     private Node root = null;
     private int count;
 
+    private boolean doubleEquals(double a, double b) {
+        double EPSILON = 0.000001;
+        return (Math.abs(a - b) < EPSILON);
+    }
+
     private class Node {
         private Point2D pointHere = null;
         private Node left = null, right = null;
@@ -109,7 +114,7 @@ public class KdTree {
                     left = true;
                 }
                 else if (next.getCompare() && p.x() >= next.getPoint().x()) {
-                    if (p.y() == next.getPoint().y() && p.x() == next.getPoint().x())    // Check if father equals to p
+                    if (doubleEquals(p.y(), next.getPoint().y()) && doubleEquals(p.x(), next.getPoint().x()))    // Check if father equals to p
                         return;
                     // go to right side
                     father = next;
@@ -123,7 +128,7 @@ public class KdTree {
                     left = true;
                 }
                 else {
-                    if (p.x() == next.getPoint().x() && p.y() == next.getPoint().y())    // Check if father equals to p
+                    if (doubleEquals(p.y(), next.getPoint().y()) && doubleEquals(p.x(), next.getPoint().x()))    // Check if father equals to p
                         return;
                     // go to upper side
                     father = next;
@@ -157,7 +162,7 @@ public class KdTree {
                     next = next.getLeftChild();
                 }
                 else if (next.getCompare() && p.x() >= next.getPoint().x()) {
-                    if (p.y() == next.getPoint().y() && p.x() == next.getPoint().x())    // Check if father equals to p
+                    if (doubleEquals(p.y(), next.getPoint().y()) && doubleEquals(p.x(), next.getPoint().x()))    // Check if father equals to p
                         return true;
                     // go to right side
                     father = next;
@@ -169,7 +174,7 @@ public class KdTree {
                     next = next.getLeftChild();
                 }
                 else {
-                    if (p.y() == next.getPoint().y() && p.x() == next.getPoint().x())    // Check if father equals to p
+                    if (doubleEquals(p.y(), next.getPoint().y()) && doubleEquals(p.x(), next.getPoint().x()))    // Check if father equals to p
                         return true;
                     // go to upper side
                     father = next;
@@ -218,9 +223,10 @@ public class KdTree {
     }
 
     private Point2D nearst(Node n, Point2D p, Point2D nearstP) {
+        double nGetPDisToP = n.getPoint().distanceSquaredTo(p);
         if (n.getLeftChild() == null && n.getRightChild() == null) {
             double distance = p.distanceSquaredTo(nearstP);
-            if (n.getPoint().distanceSquaredTo(p) < distance) {
+            if (nGetPDisToP < distance) {
                 // distance = n.getPoint().distanceSquaredTo(p);
                 nearstP = n.getPoint();
             }
@@ -230,65 +236,74 @@ public class KdTree {
         // Use Rectangle's distance to choose which side to go first;
         // Left first or Right first
         boolean leftFirst = true;
+        double nLeftRectDist = 0.0, nRightRectDist = 0.0;
+
         if (n.getLeftChild() == null)
             leftFirst = false;
         else if (n.getRightChild() == null)
             ;
-        else if (n.getLeftChild().getRect().distanceSquaredTo(p) > n.getRightChild().getRect().distanceSquaredTo(p))
+        else if ((nLeftRectDist = n.getLeftChild().getRect().distanceSquaredTo(p)) > (nRightRectDist = n.getRightChild()
+                .getRect().distanceSquaredTo(p)))
             leftFirst = false;
         else
             ;
         // Use Node n to set new distance and set new nearstP
         double distance = p.distanceSquaredTo(nearstP);
-        if (n.getPoint().distanceSquaredTo(p) < distance) {
-            distance = n.getPoint().distanceSquaredTo(p);
+        if (nGetPDisToP < distance) {
+            distance = nGetPDisToP;
             nearstP = n.getPoint();
         }
 
         if (leftFirst) {
-            if (n.getLeftChild().getRect().distanceSquaredTo(p) <= distance) {
+            if (nLeftRectDist <= distance) {
                 nearstP = nearst(n.getLeftChild(), p, nearstP);
-                if (distance > nearstP.distanceSquaredTo(p))    // check if we can got a shortter distance.
-                    distance = nearstP.distanceSquaredTo(p);
+                double tempDistance = nearstP.distanceSquaredTo(p);
+                if (distance > tempDistance)    // check if we can got a shorter distance.
+                    distance = tempDistance;
 
                 // search right subtree
-                if (n.getRightChild() != null && n.getRightChild().getRect().distanceSquaredTo(p) <= distance) {
+                if (n.getRightChild() != null && nRightRectDist <= distance) {
                     nearstP = nearst(n.getRightChild(), p, nearstP);
-                    if (distance > nearstP.distanceSquaredTo(p))
-                        distance = nearstP.distanceSquaredTo(p);
+                    tempDistance = nearstP.distanceSquaredTo(p);
+                    if (distance > tempDistance)
+                        distance = tempDistance;
                 }
             }
             // search right subtree
-            if (n.getRightChild() != null && n.getRightChild().getRect().distanceSquaredTo(p) <= distance) {
+            if (n.getRightChild() != null && nRightRectDist <= distance) {
                 nearstP = nearst(n.getRightChild(), p, nearstP);
-                if (distance > nearstP.distanceSquaredTo(p))
-                    distance = nearstP.distanceSquaredTo(p);
+                double tempDistance = nearstP.distanceSquaredTo(p);
+                if (distance > tempDistance)
+                    distance = tempDistance;
                 // search left subtree
-                if (n.getLeftChild() != null && n.getLeftChild().getRect().distanceSquaredTo(p) <= distance) {
+                if (n.getLeftChild() != null && nLeftRectDist <= distance) {
                     nearstP = nearst(n.getLeftChild(), p, nearstP);
                 }
             }
         }
         else {    // right is closer and rightChild != null
             // search right subtree
-            if (n.getRightChild().getRect().distanceSquaredTo(p) <= distance) {
+            if (nRightRectDist <= distance) {
                 nearstP = nearst(n.getRightChild(), p, nearstP);
-                if (distance > nearstP.distanceSquaredTo(p))
-                    distance = nearstP.distanceSquaredTo(p);
+                double tempDistance = nearstP.distanceSquaredTo(p);
+                if (distance > tempDistance)
+                    distance = tempDistance;
                 // search left subtree
-                if (n.getLeftChild() != null && n.getLeftChild().getRect().distanceSquaredTo(p) <= distance) {
+                if (n.getLeftChild() != null && nLeftRectDist <= distance) {
                     nearstP = nearst(n.getLeftChild(), p, nearstP);
-                    if (distance > nearstP.distanceSquaredTo(p))
-                        distance = nearstP.distanceSquaredTo(p);
+                    tempDistance = nearstP.distanceSquaredTo(p);
+                    if (distance > tempDistance)
+                        distance = tempDistance;
                 }
             }
-            if (n.getLeftChild() != null && n.getLeftChild().getRect().distanceSquaredTo(p) <= distance) {
+            if (n.getLeftChild() != null && nLeftRectDist <= distance) {
                 nearstP = nearst(n.getLeftChild(), p, nearstP);
-                if (distance > nearstP.distanceSquaredTo(p))
-                    distance = nearstP.distanceSquaredTo(p);
+                double tempDistance = nearstP.distanceSquaredTo(p);
+                if (distance > tempDistance)
+                    distance = tempDistance;
 
                 // search right subtree
-                if (n.getRightChild() != null && n.getRightChild().getRect().distanceSquaredTo(p) <= distance) {
+                if (n.getRightChild() != null && nRightRectDist <= distance) {
                     nearstP = nearst(n.getRightChild(), p, nearstP);
                 }
             }
