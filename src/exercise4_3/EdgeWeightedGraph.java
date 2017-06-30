@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.In;
 
 public class EdgeWeightedGraph {
-    private final int V;    // the sum of vertexes
+    private final int V;    // the sum of vertices 
     private int E;    // the sum of Edges
     private Bag<Edge>[] adj;    // the adjacent list
     private static final String NEWLINE = System.getProperty("line.separator");
@@ -44,6 +44,10 @@ public class EdgeWeightedGraph {
         adj[v].add(e);
         adj[w].add(e);
         E++;
+    }
+    
+    public Iterable<Edge> adj(int v) {
+        return adj[v];
     }
     
     public Iterable<Edge> edges() {
