@@ -32,12 +32,18 @@ public class PrimMST {
             if (marked[w])
                 continue;
             if (e.weight() < distTo[w]) {
+                double oldWeight = distTo[w];
                 edgeTo[w] = e;
                 distTo[w] = e.weight();
-                if (pq.contains(w))
+                if (pq.contains(w)) {
                     pq.changeKey(w, distTo[w]);
-                else
+                    weight -= oldWeight;
+                    weight += distTo[w];
+                }
+                else {
                     pq.insert(w, distTo[w]);
+                    weight += distTo[w];
+                }
             }
         }
     }
