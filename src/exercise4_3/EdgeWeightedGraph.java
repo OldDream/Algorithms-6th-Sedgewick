@@ -7,7 +7,8 @@ public class EdgeWeightedGraph {
     private final int V;    // the sum of vertexes
     private int E;    // the sum of Edges
     private Bag<Edge>[] adj;    // the adjacent list
-
+    private static final String NEWLINE = System.getProperty("line.separator");
+    
     @SuppressWarnings("unchecked")
     public EdgeWeightedGraph(int V) {
         this.V = V;
@@ -54,5 +55,18 @@ public class EdgeWeightedGraph {
             }
         }
        return b;
+    }
+    
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        s.append(V + " " + E + NEWLINE);    // NEWLINE is a line separator, in different OS, it would be different.
+        for (int v = 0; v < V; v++) {
+            s.append(v + ": ");
+            for (Edge e : adj[v]) {
+                s.append(e + "  ");
+            }
+            s.append(NEWLINE);
+        }
+        return s.toString();
     }
 }
