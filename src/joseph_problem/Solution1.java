@@ -2,8 +2,6 @@ package joseph_problem;
 
 import java.util.Scanner;
 
-// 一圈共有N个人，从1开始报数，报到M的人自杀，然后重新报数，问最后自杀的人是谁？
-
 public class Solution1 {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
@@ -29,7 +27,6 @@ public class Solution1 {
                 System.out.println("kill : " + (i + 1));
                 alive[i] = false;
                 numOfAlive--;
-                i = 0;
                 j = 0;
             }
             
