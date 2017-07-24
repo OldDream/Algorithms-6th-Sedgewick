@@ -2,6 +2,7 @@ package exercise4_4;
 
 import edu.princeton.cs.algs4.DirectedEdge;
 import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.EdgeWeightedDigraph;
 
 public class EdgeWeightedCycleFinder {
     private boolean[] marked;

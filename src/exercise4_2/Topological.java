@@ -2,7 +2,9 @@ package exercise4_2;
 
 import edu.princeton.cs.algs4.DepthFirstOrder;
 import edu.princeton.cs.algs4.SymbolDigraph;
+import exercise4_4.EdgeWeightedCycleFinder;
 import edu.princeton.cs.algs4.Digraph;
+import edu.princeton.cs.algs4.EdgeWeightedDigraph;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Topological {
@@ -10,6 +12,14 @@ public class Topological {
 
     public Topological(Digraph G) {
         DirectedCycle cyclefinder = new DirectedCycle(G);
+        if (!cyclefinder.hasCycle()) {
+            DepthFirstOrder dfs = new DepthFirstOrder(G);
+            order = dfs.reversePost();
+        }
+    }
+    
+    public Topological(EdgeWeightedDigraph G) {
+        EdgeWeightedCycleFinder cyclefinder = new EdgeWeightedCycleFinder(G);
         if (!cyclefinder.hasCycle()) {
             DepthFirstOrder dfs = new DepthFirstOrder(G);
             order = dfs.reversePost();
