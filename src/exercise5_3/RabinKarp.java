@@ -2,6 +2,7 @@ package exercise5_3;
 
 import java.math.BigInteger;
 import java.util.Random;
+import java.util.Scanner;
 
 public class RabinKarp {
     private String pat;
@@ -64,5 +65,32 @@ public class RabinKarp {
     private long longRandomPrime() {
         BigInteger prime = BigInteger.probablePrime(63, new Random());
         return prime.longValue();
+    }
+    
+    public int checkSub(String txt) {
+        int i = search(txt);
+        if (i <= txt.length() - M)
+            System.out.println("MATCHED");
+        else 
+            System.out.println("Not matched.");
+        return i;
+    }
+    
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        System.out.print("pat: ");
+        String pat = input.nextLine();
+        System.out.print("txt: ");
+        String txt = input.nextLine();
+        
+        RabinKarp rk = new RabinKarp(pat);
+        int offset = rk.checkSub(txt);
+        System.out.println("Index " + offset);
+        
+        System.out.println(txt);
+        for (int i = 0; i < offset; i++)
+            System.out.print(" ");
+        System.out.println(pat);
+        
     }
 }
