@@ -1,138 +1,91 @@
+import edu.princeton.cs.algs4.BreadthFirstDirectedPaths;
 import edu.princeton.cs.algs4.Digraph;
 import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
+/**
+ * Created by Leon on 7/30/15.
+ */
 public class SAP {
-    private Digraph G;
-
+    private static final int INFINITY = Integer.MAX_VALUE;
+    private final Digraph digraph;
     // constructor takes a digraph (not necessarily a DAG)
     public SAP(Digraph G) {
-        this.G = G;
+        digraph = new Digraph(G);
     }
 
     // length of shortest ancestral path between v and w; -1 if no such path
     public int length(int v, int w) {
-        if (v < 0 || w < 0 || v >= G.V() || w >= G.V())
-            throw new java.lang.IllegalArgumentException();
+        validate(v);
+        validate(w);
 
-        int ancestorV = ancestor(v, w);
-        int length = -1;
-        if (ancestorV != -1) {
-            length = getAncestorDist(v, ancestorV) + getAncestorDist(w, ancestorV);
-        }
+        BreadthFirstDirectedPaths vpaths = new BreadthFirstDirectedPaths(digraph, v);
+        BreadthFirstDirectedPaths wpaths = new BreadthFirstDirectedPaths(digraph, w);
 
-        return length;
-    }
-    
-    private int getAncestorDist (int v, int ancestor) {
-        if (v == ancestor)
-            return 0;
-        
-        int[] edgeTo = new int[G.V()];
-        Queue<Integer> q = new Queue<>();
-        q.enqueue(v);
-        
-        while (!q.isEmpty()) {
-            int tempV = q.dequeue();
-            for (int i : G.adj(tempV)) {
-                edgeTo[i] = tempV;
-                if (i == ancestor)
-                    return pathLength(edgeTo, ancestor, v);
-                q.enqueue(i);
-            }
-        }
-        return -1;
-    }
-    
-    private int pathLength (int[] edgeTo, int from, int to) {
-        int dist = 0;
-        for (int x = from; x != to; x = edgeTo[x]) {
-            dist++;
-        }
-        return dist;
+        return sapHelper(vpaths, wpaths, true);
     }
 
     // a common ancestor of v and w that participates in a shortest ancestral path; -1 if no such path
     public int ancestor(int v, int w) {
-        if (v < 0 || w < 0 || v >= G.V() || w >= G.V())
-            throw new java.lang.IllegalArgumentException();
+        validate(v);
+        validate(w);
 
-        int ancestorNum = -1;
-        boolean[] marked = new boolean[G.V()];
-        marked[v] = true;
-        marked[w] = true;
-        Queue<Integer> q = new Queue<>();
-        q.enqueue(v);
-        q.enqueue(w);
+        BreadthFirstDirectedPaths vpaths = new BreadthFirstDirectedPaths(digraph, v);
+        BreadthFirstDirectedPaths wpaths = new BreadthFirstDirectedPaths(digraph, w);
 
-        while (!q.isEmpty()) {
-            int temp = q.dequeue();    // pull v or w out in turn.
-            for (int i : G.adj(temp)) {
-                if (marked[i]) {
-                    ancestorNum = i;
-                    return ancestorNum;
-                }
-                else {
-                    marked[i] = true;
-                    q.enqueue(i);
-                }
-            }
-        }
-
-        return -1;
+        return sapHelper(vpaths, wpaths, false);
     }
 
     // length of shortest ancestral path between any vertex in v and any vertex in w; -1 if no such path
     public int length(Iterable<Integer> v, Iterable<Integer> w) {
-        int ancestorV = ancestor(v, w);
-        if (ancestorV == -1)
-            return -1;
-        
-        int minFromV = Integer.MAX_VALUE;
-        int minFromW = Integer.MAX_VALUE;
-        
-        for (int i : v) {
-            int tempL = getAncestorDist(i , ancestorV);
-            if (tempL < minFromV)
-                minFromV = tempL;
-        }
-        for (int i : w) {
-            int tempL = getAncestorDist(i , ancestorV);
-            if (tempL < minFromW)
-                minFromW = tempL;
-        }
-        
-        return minFromV + minFromW;
+        if (v == null || w == null) throw new IllegalArgumentException();
+        validate(v);
+        validate(w);
+
+        BreadthFirstDirectedPaths vpaths = new BreadthFirstDirectedPaths(digraph, v);
+        BreadthFirstDirectedPaths wpaths = new BreadthFirstDirectedPaths(digraph, w);
+
+        return sapHelper(vpaths, wpaths, true);
     }
 
     // a common ancestor that participates in shortest ancestral path; -1 if no such path
     public int ancestor(Iterable<Integer> v, Iterable<Integer> w) {
-        boolean[] marked = new boolean[G.V()];
-        Queue<Integer> q = new Queue<>();
-        for (int i : v) {
-            if (i < 0 || i >= G.V())
-                throw new java.lang.IllegalArgumentException();
-            q.enqueue(i);
+        if (v == null || w == null) throw new IllegalArgumentException();
+        validate(v);
+        validate(w);
+
+        BreadthFirstDirectedPaths vpaths = new BreadthFirstDirectedPaths(digraph, v);
+        BreadthFirstDirectedPaths wpaths = new BreadthFirstDirectedPaths(digraph, w);
+
+        return sapHelper(vpaths, wpaths, false);
+    }
+
+    private void validate(int v) {
+        if (v < 0 || v > digraph.V() - 1) throw new IllegalArgumentException();
+    }
+
+    private void validate(Iterable<Integer> v) {
+        for (Integer i : v) {
+            validate(i);
         }
-        for (int i : w) {
-            if (i < 0 || i >= G.V())
-                throw new java.lang.IllegalArgumentException();
-            q.enqueue(i);
-        }
-        
-        while(!q.isEmpty()) {
-            int tempV = q.dequeue();
-            if (!marked[tempV]) {
-                marked[tempV] = true;
-                for (int i : G.adj(tempV))
-                    q.enqueue(i);
+    }
+
+    private int sapHelper(BreadthFirstDirectedPaths vpaths, BreadthFirstDirectedPaths wpaths, boolean length) {
+        int minlen = INFINITY;
+        int ancestor = -1;
+        for (int i = 0; i < digraph.V(); i++) {
+            if (vpaths.hasPathTo(i) && wpaths.hasPathTo(i)) {
+                int vlen = vpaths.distTo(i);
+                int wlen = wpaths.distTo(i);
+                if (vlen + wlen < minlen) {
+                    minlen = vlen + wlen;
+                    ancestor = i;
+                }
             }
-            return tempV;
         }
-        
-        return -1;
+        if (length) return minlen < INFINITY ? minlen : -1;
+        else return ancestor;
     }
 
     // do unit testing of this class

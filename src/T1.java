@@ -1,3 +1,4 @@
+import edu.princeton.cs.algs4.Queue;
 
 public class T1 {
     public static void main(String[] args) {
@@ -8,5 +9,13 @@ public class T1 {
             System.out.println("Ha");
         else
             System.out.println("Ma");
+        
+        Queue<Integer> q = new Queue<>();
+        q.enqueue(3);
+        q.enqueue(3);
+        q.enqueue(3);
+        
+        while (!q.isEmpty())
+            System.out.println(q.dequeue());
     }
 }
