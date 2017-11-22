@@ -109,7 +109,7 @@ public class WordNet {
     private void checkRoot() {
         Digraph Gr = this.G.reverse();
         for (int v = 0; v < V; v++) {
-            if (this.G.outdegree(v) == 0) {     // 这个是原图G中的root，只有入，没有出
+            if (this.G.outdegree(v) == 0) {     // 寻找root，这个是原图G中的root，只有入，没有出。
                 int count = 1;
                 boolean[] marked = new boolean[V];
                 marked[v] = true;
@@ -120,7 +120,7 @@ public class WordNet {
                     for (int i : Gr.adj(w)) {    // 注意这里已经是反向图了
                         if (!marked[i]) {
                             marked[i] = true;
-                            count++;
+                            count++;    // 统计到过的点
                             visited.enqueue(i);
                         }
                     }
