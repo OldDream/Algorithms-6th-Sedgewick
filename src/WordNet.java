@@ -36,6 +36,8 @@ public class WordNet {
 
     // is the word a WordNet noun?
     public boolean isNoun(String word){
+    	if (word == null)
+    		throw new IllegalArgumentException();
         return wordmap.containsKey(word);
     }
 
