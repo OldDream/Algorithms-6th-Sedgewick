@@ -17,16 +17,16 @@ public class Outcast {
                 di[i] += wordnet.distance(nouns[i], s);
             }
         }
-        return nouns[getMinIndex(di)];
+        return nouns[getMax(di)];
     }
     
-    private int getMinIndex (int[] di) {
-        int minIndex = 0;
+    private int getMax (int[] di) {
+        int maxIndex = 0;
         for (int i = 0; i < di.length; i++) {
-            if (di[minIndex] > di[i])
-                minIndex = i;
+            if (di[maxIndex] < di[i])
+                maxIndex = i;
         }
-        return minIndex;
+        return maxIndex;
     }
 
     // see test client below
