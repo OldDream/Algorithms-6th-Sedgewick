@@ -4,9 +4,6 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
 
-/**
- * Created by Leon on 7/30/15.
- */
 public class SAP {
     private static final int INFINITY = Integer.MAX_VALUE;
     private final Digraph digraph;

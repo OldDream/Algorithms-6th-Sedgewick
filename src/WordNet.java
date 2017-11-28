@@ -7,16 +7,16 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Queue;
 
 public class WordNet {
-    private final HashMap<Integer, Bag<String>> idmap;
-    private final HashMap<String, Bag<Integer>> wordmap;
+    private final HashMap<Integer, Queue<String>> idmap;
+    private final HashMap<String, Queue<Integer>> wordmap;
     private final Digraph G;
     private final SAP sap;
     private int V;     // Vertex数，这个得自己数
 
     // constructor takes the name of the two input files
     public WordNet(String synsets, String hypernyms){
-        idmap = new HashMap<Integer, Bag<String>>();
-        wordmap = new HashMap<String, Bag<Integer>>();
+        idmap = new HashMap<Integer, Queue<String>>();
+        wordmap = new HashMap<String, Queue<Integer>>();
         readSynsets(synsets);
 
         G = new Digraph(V);
@@ -58,7 +58,7 @@ public class WordNet {
         Iterable<Integer> B = wordmap.get(nounB);
 
         int ancestor = sap.ancestor(A, B);
-        Bag<String> result = idmap.get(ancestor);
+        Queue<String> result = idmap.get(ancestor);
         return concat(result);
     }
     //helper function for read in file for synsets
@@ -71,14 +71,14 @@ public class WordNet {
             String[] tokens = line.split(",");
             Integer id = Integer.parseInt(tokens[0]);    
             String[] nouns = tokens[1].split(" ");
-            Bag<String> words = new Bag<String>();
+            Queue<String> words = new Queue<String>();
 
             for (int i = 0; i < nouns.length; i++) {
-                words.add(nouns[i]);
-                Bag<Integer> ids = new Bag<Integer>();    // 注意了，输入中的ID是从0开始的
+                words.enqueue(nouns[i]);
+                Queue<Integer> ids = new Queue<Integer>();    // 注意了，输入中的ID是从0开始的
                 if (this.wordmap.containsKey(nouns[i]))
                     ids = this.wordmap.get(nouns[i]);
-                ids.add(id);
+                ids.enqueue(id);
                 this.wordmap.put(nouns[i], ids);
             }
 
@@ -132,12 +132,13 @@ public class WordNet {
         }
     }
     //helper function for concat nouns
-    private String concat(Bag<String> nouns) {
+    private String concat(Queue<String> nouns) {
         String result = "";
         for (String noun : nouns) {
-            result = result + noun;
+            result += noun;
+            result += " ";
         }
-        return result;
+        return result.substring(0, result.length() - 1);
     }
 
     // do unit testing of this class
