@@ -1,1 +1,6 @@
 /bin/
+bin/KdTree$Node.class
+bin/KdTree.class
+
+/.metadata/
+/.settings/
