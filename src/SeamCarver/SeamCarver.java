@@ -3,9 +3,12 @@ package SeamCarver;
 import edu.princeton.cs.algs4.Picture;
 
 public class SeamCarver {
+    Picture pic;
+    
     // create a seam carver object based on the given picture
     public SeamCarver(Picture picture) {
-
+        pic = new Picture(picture);
+        Integ
     }
 
     // current picture
