@@ -8,7 +8,7 @@ public class SeamCarver {
     // create a seam carver object based on the given picture
     public SeamCarver(Picture picture) {
         pic = new Picture(picture);
-        Integ
+        inte
     }
 
     // current picture
