@@ -25,8 +25,6 @@ public class WordNet {
 
         checkCycle();
         checkRoot();
-
-
     }
 
     // returns all WordNet nouns
