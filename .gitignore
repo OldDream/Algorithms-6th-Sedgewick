@@ -1,7 +1,13 @@
 /bin/
 bin/KdTree$Node.class
 bin/KdTree.class
+<<<<<<< HEAD
 
 /.metadata/
 /.settings/
 src/WordNet.java
+=======
+
+/.metadata/
+/.settings/
+>>>>>>> 9bc08dc84f8ecd892e56a4c2decc651355ff53e3
