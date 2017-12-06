@@ -36,7 +36,7 @@ public class SeamCarver {
         return energy;
     }
 
-    // sequence of indices for horizontal seam
+   /* // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
     }
 
@@ -50,5 +50,5 @@ public class SeamCarver {
 
     // remove vertical seam from current picture
     public void removeVerticalSeam(int[] seam) {
-    }
+    }*/
 }
