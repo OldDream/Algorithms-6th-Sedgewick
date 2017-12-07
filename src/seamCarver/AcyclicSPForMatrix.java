@@ -3,6 +3,7 @@ package seamCarver;
 import java.awt.Point;
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.Stack;
+import edu.princeton.cs.algs4.StdOut;
 
 public class AcyclicSPForMatrix {
     private double[][] distTo;
@@ -10,8 +11,10 @@ public class AcyclicSPForMatrix {
     private int width, height, edge;
     private double[][] eMatrix;
     private double minDist;
+    private int s;
 
     public AcyclicSPForMatrix(double[][] eMatrix, int s) {
+        this.s = s;
         this.eMatrix = eMatrix;
         width = eMatrix.length;
         height = eMatrix[0].length;
@@ -40,9 +43,17 @@ public class AcyclicSPForMatrix {
         // the SP ends at bottomXOfPath
         int bottomXOfPath = 0;
         minDist = distTo[0][edge];
-        for (int i = 1; i < width; i++) {
-            if (distTo[i][edge] < minDist)
+        for (int i = 0; i < width; i++) {
+            if (distTo[i][edge] < minDist) {
+                minDist = distTo[i][edge];
                 bottomXOfPath = i;
+            }
+            // for debug
+            /*if (s == 1) {
+                StdOut.println();
+                StdOut.println("index = " + i + " dist = " + distTo[i][edge]);
+                StdOut.println("bottomXOfPath = " + bottomXOfPath);
+            }*/
         }
 
         int[] path = new int[height];
