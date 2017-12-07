@@ -1,3 +1,4 @@
+package Test;
 
 public class T2 {
     private static int num;

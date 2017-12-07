@@ -3,8 +3,9 @@ package seamCarver;
 import edu.princeton.cs.algs4.Picture;
 
 public class SeamCarver {
-    Picture pic;
-    int width, height;
+    private Picture pic;
+    private int width, height;
+    private double[][] energyMatrix;
     
     // create a seam carver object based on the given picture
     public SeamCarver(Picture picture) {
@@ -35,14 +36,30 @@ public class SeamCarver {
         double energy = CalcualteEnergy.getEnergy(x, y, pic);
         return energy;
     }
+    
+    // renew the Matrix of energy
+    private void renewEnergyMatrix() {
+        energyMatrix = new double[width][height];
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                // row i and column j
+                energyMatrix[i][j] = energy(i, j);
+            }
+        }
+    }
+    
+ // sequence of indices for vertical seam
+    public int[] findVerticalSeam() {
+        renewEnergyMatrix();
+        int[] seam = SeamFinder.findSeam(energyMatrix);
+        return seam;
+    }
 
    /* // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
     }
 
-    // sequence of indices for vertical seam
-    public int[] findVerticalSeam() {
-    }
+    
 
     // remove horizontal seam from current picture
     public void removeHorizontalSeam(int[] seam) {
@@ -51,4 +68,6 @@ public class SeamCarver {
     // remove vertical seam from current picture
     public void removeVerticalSeam(int[] seam) {
     }*/
+    
+   
 }
