@@ -13,32 +13,25 @@ public class AcyclicSPForMatrix {
 
     public AcyclicSPForMatrix(double[][] eMatrix, int s) {
         this.eMatrix = eMatrix;
-        width = eMatrix[0].length;
-        height = eMatrix.length;
+        width = eMatrix.length;
+        height = eMatrix[0].length;
         edge = height - 1;
-        /*
-         * in vertexTo, we only save the horizontal coordinate, because the vertical coordinate =
-         * this point - 1.
-         */
-        vertexTo = new int[eMatrix.length][eMatrix[0].length];
+        vertexTo = new int[width][height];
         // save the distance from source point to this point.
-        distTo = new double[eMatrix.length][eMatrix[0].length];
+        distTo = new double[width][height];
 
-        for (int i = 0; i < distTo.length; i++) {
-            for (int j = 0; j < distTo[0].length; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 distTo[i][j] = Double.POSITIVE_INFINITY;
+                vertexTo[i][j] = -1;
             }
         }
 
         distTo[s][0] = 0.0;
-        vertexTo[s][0] = s;
         for (Point i : getToplogicalOrder(s)) {
             // the i was in topological order!
             // relax the vertex in order than we get the shortest path.
-            if (i.y == edge) {
-                distTo[i.x][i.y] += eMatrix[i.x][i.y];
-            } else
-                relaxVertex(i);
+            relaxVertex(i);
         }
     }
 
@@ -46,23 +39,25 @@ public class AcyclicSPForMatrix {
         // find the shortest path.
         // the SP ends at bottomXOfPath
         int bottomXOfPath = 0;
-        minDist = distTo[edge][0];
+        minDist = distTo[0][edge];
         for (int i = 1; i < width; i++) {
-            if (distTo[edge][i] < minDist)
+            if (distTo[i][edge] < minDist)
                 bottomXOfPath = i;
         }
 
         int[] path = new int[height];
         path[height - 1] = bottomXOfPath; // put bottomXOfPath in the end
         int temp = bottomXOfPath;
-        for (int i = height - 2; i >= 0; i++) {
+        for (int i = height - 1; i >= 0; i--) {
+            if (i == height - 1)
+                continue;
             path[i] = vertexTo[temp][i + 1];
             temp = vertexTo[temp][i + 1];
         }
 
         return path;
     }
-    
+
     public double getShortestDist() {
         return minDist;
     }
@@ -70,11 +65,13 @@ public class AcyclicSPForMatrix {
     private void relaxVertex(Point i) {
         int x = i.x;
         int y = i.y;
+        if (y == edge)
+            return;
         int nextY = y + 1;
         int leftX = x - 1;
         int rightX = x + 1;
         int middleX = x;
-
+        
         if (leftX >= 0) {
             if (distTo[leftX][nextY] > distTo[x][y] + eMatrix[x][y]) {
                 distTo[leftX][nextY] = distTo[x][y] + eMatrix[x][y];
@@ -95,7 +92,6 @@ public class AcyclicSPForMatrix {
                 vertexTo[middleX][nextY] = x;
             }
         }
-
     }
 
     private Queue<Point> getToplogicalOrder(int s) {
@@ -103,18 +99,17 @@ public class AcyclicSPForMatrix {
         Stack<Point> stack = new Stack<>();
 
         stack.push(new Point(s, 0));
-
+        q.enqueue(new Point(s, 0));
         while (!stack.isEmpty()) {
             Point temp = stack.pop();
-            q.enqueue(temp);
-            int y = temp.y;
             int x = temp.x;
+            int y = temp.y;
 
-            int nextY = y + 1;
-            if (nextY >= height) { // detect the bottom edge
+            if (y == edge) { // detect the bottom edge
                 continue;
             }
 
+            int nextY = y + 1;
             int leftX = x - 1;
             int rightX = x + 1;
             int middleX = x;
@@ -125,20 +120,18 @@ public class AcyclicSPForMatrix {
                 q.enqueue(temp1);
             }
 
+            if (middleX >= 0 && middleX < width) {
+                Point temp1 = new Point(middleX, nextY);
+                stack.push(temp1);
+                q.enqueue(temp1);
+            }
+
             if (rightX < width) {
                 Point temp1 = new Point(rightX, nextY);
                 stack.push(temp1);
                 q.enqueue(temp1);
             }
-
-            if (middleX >= 0 && middleX <= width) {
-                Point temp1 = new Point(rightX, nextY);
-                stack.push(temp1);
-                q.enqueue(temp1);
-            }
         }
-
         return q;
     }
-
 }

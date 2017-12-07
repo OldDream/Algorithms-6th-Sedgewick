@@ -37,8 +37,8 @@ import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdOut;
 
 public class PrintSeams {
-    private static final boolean HORIZONTAL   = true;
-    private static final boolean VERTICAL     = false;
+    private static final boolean HORIZONTAL   = false;
+    private static final boolean VERTICAL     = true;
 
     private static void printSeam(SeamCarver carver, int[] seam, boolean direction) {
         double totalSeamEnergy = 0.0;
@@ -79,12 +79,12 @@ public class PrintSeams {
         StdOut.println("}");
         printSeam(carver, verticalSeam, VERTICAL);
 
-        StdOut.printf("Horizontal seam: { ");
-        int[] horizontalSeam = carver.findVerticalSeam();
+/*        StdOut.printf("Horizontal seam: { ");
+        int[] horizontalSeam = carver.findHorizontalSeam();
         for (int y : horizontalSeam)
             StdOut.print(y + " ");
         StdOut.println("}");
-        printSeam(carver, horizontalSeam, HORIZONTAL);
+        printSeam(carver, horizontalSeam, HORIZONTAL);*/
 
     }
 
