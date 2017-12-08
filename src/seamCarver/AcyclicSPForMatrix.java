@@ -1,21 +1,24 @@
 package seamCarver;
 
-import java.awt.Point;
+import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.Stack;
-import edu.princeton.cs.algs4.StdOut;
 
 public class AcyclicSPForMatrix {
     private double[][] distTo;
-    private static int[][] vertexTo;
-    private int width, height, edge;
-    private double[][] eMatrix;
+    private int[][] vertexTo;
+    private final int width, height, edge;
+    private final double[][] eMatrix;
     private double minDist;
-    private int s;
 
     public AcyclicSPForMatrix(double[][] eMatrix, int s) {
-        this.s = s;
-        this.eMatrix = eMatrix;
+        double[][] temp = new double[eMatrix.length][eMatrix[0].length];
+        for (int i = 0; i < eMatrix.length; i++) {
+            for (int j = 0; j < eMatrix[0].length; j++) {
+                temp[i][j] = eMatrix[i][j];
+            }
+        }
+        this.eMatrix = temp;
         width = eMatrix.length;
         height = eMatrix[0].length;
         edge = height - 1;
@@ -31,7 +34,7 @@ public class AcyclicSPForMatrix {
         }
 
         distTo[s][0] = 0.0;
-        for (Point i : getToplogicalOrder(s)) {
+        for (Point2D i : getToplogicalOrder(s)) {
             // the i was in topological order!
             // relax the vertex in order than we get the shortest path.
             relaxVertex(i);
@@ -49,11 +52,10 @@ public class AcyclicSPForMatrix {
                 bottomXOfPath = i;
             }
             // for debug
-            /*if (s == 1) {
-                StdOut.println();
-                StdOut.println("index = " + i + " dist = " + distTo[i][edge]);
-                StdOut.println("bottomXOfPath = " + bottomXOfPath);
-            }*/
+            /*
+             * if (s == 1) { StdOut.println(); StdOut.println("index = " + i + " dist = " +
+             * distTo[i][edge]); StdOut.println("bottomXOfPath = " + bottomXOfPath); }
+             */
         }
 
         int[] path = new int[height];
@@ -73,16 +75,16 @@ public class AcyclicSPForMatrix {
         return minDist;
     }
 
-    private void relaxVertex(Point i) {
-        int x = i.x;
-        int y = i.y;
+    private void relaxVertex(Point2D i) {
+        int x = (int) i.x();
+        int y = (int) i.y();
         if (y == edge)
             return;
         int nextY = y + 1;
         int leftX = x - 1;
         int rightX = x + 1;
         int middleX = x;
-        
+
         if (leftX >= 0) {
             if (distTo[leftX][nextY] > distTo[x][y] + eMatrix[x][y]) {
                 distTo[leftX][nextY] = distTo[x][y] + eMatrix[x][y];
@@ -105,16 +107,16 @@ public class AcyclicSPForMatrix {
         }
     }
 
-    private Queue<Point> getToplogicalOrder(int s) {
-        Queue<Point> q = new Queue<>();
-        Stack<Point> stack = new Stack<>();
+    private Queue<Point2D> getToplogicalOrder(int s) {
+        Queue<Point2D> q = new Queue<>();
+        Stack<Point2D> stack = new Stack<>();
 
-        stack.push(new Point(s, 0));
-        q.enqueue(new Point(s, 0));
+        stack.push(new Point2D(s, 0));
+        q.enqueue(new Point2D(s, 0));
         while (!stack.isEmpty()) {
-            Point temp = stack.pop();
-            int x = temp.x;
-            int y = temp.y;
+            Point2D temp = stack.pop();
+            int x = (int) temp.x();
+            int y = (int) temp.y();
 
             if (y == edge) { // detect the bottom edge
                 continue;
@@ -126,19 +128,19 @@ public class AcyclicSPForMatrix {
             int middleX = x;
 
             if (leftX >= 0) {
-                Point temp1 = new Point(leftX, nextY);
+                Point2D temp1 = new Point2D(leftX, nextY);
                 stack.push(temp1);
                 q.enqueue(temp1);
             }
 
             if (middleX >= 0 && middleX < width) {
-                Point temp1 = new Point(middleX, nextY);
+                Point2D temp1 = new Point2D(middleX, nextY);
                 stack.push(temp1);
                 q.enqueue(temp1);
             }
 
             if (rightX < width) {
-                Point temp1 = new Point(rightX, nextY);
+                Point2D temp1 = new Point2D(rightX, nextY);
                 stack.push(temp1);
                 q.enqueue(temp1);
             }

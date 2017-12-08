@@ -1,11 +1,9 @@
 package seamCarver;
 
-import edu.princeton.cs.algs4.StdOut;
-
 public class SeamFinder {
     // find seam form top to bottom
 
-    protected static int[] findSeam(double[][] eMatrix) {
+    public static int[] findSeam(double[][] eMatrix) {
         int[][] savePaths = new int[eMatrix.length][];
         double[] distOfPaths = new double[eMatrix.length];
 

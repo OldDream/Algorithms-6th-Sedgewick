@@ -81,17 +81,24 @@ public class SeamCarver {
     
     // remove vertical seam from current picture
     public void removeVerticalSeam(int[] seam) {
+        width--;
         for (int y = 0; y < height(); y++) {
-            for (int x = seam[y]; x < width() - 1; x++) {
+            for (int x = seam[y]; x < width(); x++) {
                 // when x >= seam[y], copy pixel from the right one
                 pic.setRGB(x, y, pic.getRGB(x + 1, y));
             }
         }
-        width--;
+        
     }
     
     // remove horizontal seam from current picture
     public void removeHorizontalSeam(int[] seam) {
+        height--;
+        for (int x = 0; x < width(); x++) {
+            for (int y = seam[x]; y < height(); y++) {
+                pic.setRGB(x, y, pic.getRGB(x, y + 1));
+            }
+        }
     }
     
     

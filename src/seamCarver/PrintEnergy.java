@@ -1,5 +1,6 @@
 package seamCarver;
 
+
 /******************************************************************************
  *  Compilation:  javac PrintEnergy.java
  *  Execution:    java PrintEnergy input.png
