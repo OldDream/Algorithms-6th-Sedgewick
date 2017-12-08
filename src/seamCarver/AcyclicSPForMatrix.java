@@ -2,7 +2,6 @@ package seamCarver;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.Queue;
-import edu.princeton.cs.algs4.SET;
 
 public class AcyclicSPForMatrix {
     private double[][] distTo;
@@ -14,9 +13,7 @@ public class AcyclicSPForMatrix {
     public AcyclicSPForMatrix(double[][] eMatrix, int s) {
         double[][] temp = new double[eMatrix.length][eMatrix[0].length];
         for (int i = 0; i < eMatrix.length; i++) {
-            for (int j = 0; j < eMatrix[0].length; j++) {
-                temp[i][j] = eMatrix[i][j];
-            }
+            System.arraycopy(eMatrix[i], 0, temp[i], 0, eMatrix[i].length);
         }
         this.eMatrix = temp;
         width = eMatrix.length;
@@ -138,13 +135,12 @@ public class AcyclicSPForMatrix {
             Point2D temp = sq.dequeue();
             int x = (int) temp.x();
             int y = (int) temp.y();
-            int previousX = (int) previous.x();
-            int previousY = (int) previous.y();
-
+            
             if (y >= edge) { // detect the bottom edge
                 continue;
             }
-
+            
+            int previousY = (int) previous.y();
             int nextY = y + 1;
             int leftX = x - 1;
             int rightX = x + 1;
@@ -178,7 +174,6 @@ public class AcyclicSPForMatrix {
                     q.enqueue(temp1);
                 }
             }
-
             previous = temp; // set temp as previous point
         }
         return q;
