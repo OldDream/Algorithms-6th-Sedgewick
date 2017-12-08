@@ -3,7 +3,6 @@ package seamCarver;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.SET;
-import edu.princeton.cs.algs4.Stack;
 
 public class AcyclicSPForMatrix {
     private double[][] distTo;
@@ -30,7 +29,7 @@ public class AcyclicSPForMatrix {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 distTo[i][j] = Double.POSITIVE_INFINITY;
-                vertexTo[i][j] = -1;
+                // vertexTo[i][j] = -1;
             }
         }
 
@@ -52,11 +51,6 @@ public class AcyclicSPForMatrix {
                 minDist = distTo[i][edge];
                 bottomXOfPath = i;
             }
-            // for debug
-            /*
-             * if (s == 1) { StdOut.println(); StdOut.println("index = " + i + " dist = " +
-             * distTo[i][edge]); StdOut.println("bottomXOfPath = " + bottomXOfPath); }
-             */
         }
 
         int[] path = new int[height];
@@ -85,24 +79,25 @@ public class AcyclicSPForMatrix {
         int leftX = x - 1;
         int rightX = x + 1;
         int middleX = x;
+        double terget = distTo[x][y] + eMatrix[x][y];
 
         if (leftX >= 0) {
-            if (distTo[leftX][nextY] > distTo[x][y] + eMatrix[x][y]) {
-                distTo[leftX][nextY] = distTo[x][y] + eMatrix[x][y];
+            if (distTo[leftX][nextY] > terget) {
+                distTo[leftX][nextY] = terget;
                 vertexTo[leftX][nextY] = x;
             }
         }
 
         if (rightX < width) {
-            if (distTo[rightX][nextY] > distTo[x][y] + eMatrix[x][y]) {
-                distTo[rightX][nextY] = distTo[x][y] + eMatrix[x][y];
+            if (distTo[rightX][nextY] > terget) {
+                distTo[rightX][nextY] = terget;
                 vertexTo[rightX][nextY] = x;
             }
         }
 
         if (middleX >= 0 && middleX < width) {
-            if (distTo[middleX][nextY] > distTo[x][y] + eMatrix[x][y]) {
-                distTo[middleX][nextY] = distTo[x][y] + eMatrix[x][y];
+            if (distTo[middleX][nextY] > terget) {
+                distTo[middleX][nextY] = terget;
                 vertexTo[middleX][nextY] = x;
             }
         }
@@ -111,7 +106,7 @@ public class AcyclicSPForMatrix {
     private Queue<Point2D> getToplogicalOrder(int s) {
         Queue<Point2D> q = new Queue<>();
         Queue<Point2D> sq = new Queue<>();
-        
+
         Point2D start = new Point2D(s, 0);
         sq.enqueue(start);
         q.enqueue(start);
@@ -119,7 +114,7 @@ public class AcyclicSPForMatrix {
         checkList.add(start);
 
         while (!sq.isEmpty()) {
-            Point2D temp = sq.dequeue();            
+            Point2D temp = sq.dequeue();
             int x = (int) temp.x();
             int y = (int) temp.y();
 
@@ -131,6 +126,7 @@ public class AcyclicSPForMatrix {
             int leftX = x - 1;
             int rightX = x + 1;
             int middleX = x;
+            boolean doNotSkip = true;
 
             if (leftX >= 0) {
                 Point2D temp1 = new Point2D(leftX, nextY);
@@ -138,10 +134,12 @@ public class AcyclicSPForMatrix {
                     sq.enqueue(temp1);
                     q.enqueue(temp1);
                     checkList.add(temp1);
+                } else {
+                    doNotSkip = false;
                 }
             }
 
-            if (middleX >= 0 && middleX < width) {
+            if (doNotSkip && middleX >= 0 && middleX < width) {
                 Point2D temp1 = new Point2D(middleX, nextY);
                 if (!checkList.contains(temp1)) {
                     sq.enqueue(temp1);
@@ -152,13 +150,10 @@ public class AcyclicSPForMatrix {
 
             if (rightX < width) {
                 Point2D temp1 = new Point2D(rightX, nextY);
-                if (!checkList.contains(temp1)) {
-                    sq.enqueue(temp1);
-                    q.enqueue(temp1);
-                    checkList.add(temp1);
-                }
+                sq.enqueue(temp1);
+                q.enqueue(temp1);
+                checkList.add(temp1);
             }
-            
         }
         return q;
     }

@@ -44,7 +44,7 @@ public class SeamCarver {
     public double energy(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height)
             throw new IllegalArgumentException();
-        double energy = CalcualteEnergy.getEnergy(x, y, pic);
+        double energy = CalcualteEnergy.getEnergy(x, y, pic, width, height);
         return energy;
     }
 
@@ -134,14 +134,5 @@ public class SeamCarver {
             }
         }
     }
-
-
-    /*
-     * // low efficiency version public void removeVerticalSeam(int[] seam) { Picture newPic = new
-     * Picture(width - 1, height); for (int y = 0; y < newPic.height(); y++) { for (int x = 0; x <
-     * newPic.width(); x++) { if (x < seam[y]) { newPic.setRGB(x, y, pic.getRGB(x, y)); } else { //
-     * x >= seam[y] newPic.setRGB(x, y, pic.getRGB(x + 1, y)); } } } pic = newPic; width--; }
-     */
-
 
 }

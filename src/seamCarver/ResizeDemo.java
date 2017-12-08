@@ -1,7 +1,5 @@
 package seamCarver;
 
-import java.io.File;
-
 /******************************************************************************
  *  Compilation:  javac ResizeDemo.java
  *  Execution:    java ResizeDemo input.png columnsToRemove rowsToRemove
@@ -50,7 +48,6 @@ public class ResizeDemo {
         StdOut.println("Resizing time: " + sw.elapsedTime() + " seconds.");
         inputImg.show();
         outputImg.show();
-        //outputImg.save(new File(arg0));
     }
     
 }
