@@ -29,7 +29,6 @@ public class AcyclicSPForMatrix {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 distTo[i][j] = Double.POSITIVE_INFINITY;
-                // vertexTo[i][j] = -1;
             }
         }
 
@@ -81,25 +80,19 @@ public class AcyclicSPForMatrix {
         int middleX = x;
         double terget = distTo[x][y] + eMatrix[x][y];
 
-        if (leftX >= 0) {
-            if (distTo[leftX][nextY] > terget) {
-                distTo[leftX][nextY] = terget;
-                vertexTo[leftX][nextY] = x;
-            }
+        if (leftX >= 0 && distTo[leftX][nextY] > terget) {
+            distTo[leftX][nextY] = terget;
+            vertexTo[leftX][nextY] = x;
         }
 
-        if (rightX < width) {
-            if (distTo[rightX][nextY] > terget) {
-                distTo[rightX][nextY] = terget;
-                vertexTo[rightX][nextY] = x;
-            }
+        if (rightX < width && distTo[rightX][nextY] > terget) {
+            distTo[rightX][nextY] = terget;
+            vertexTo[rightX][nextY] = x;
         }
 
-        if (middleX >= 0 && middleX < width) {
-            if (distTo[middleX][nextY] > terget) {
-                distTo[middleX][nextY] = terget;
-                vertexTo[middleX][nextY] = x;
-            }
+        if (middleX >= 0 && middleX < width && distTo[middleX][nextY] > terget) {
+            distTo[middleX][nextY] = terget;
+            vertexTo[middleX][nextY] = x;
         }
     }
 
@@ -108,15 +101,45 @@ public class AcyclicSPForMatrix {
         Queue<Point2D> sq = new Queue<>();
 
         Point2D start = new Point2D(s, 0);
-        sq.enqueue(start);
+        Point2D previous = null;
         q.enqueue(start);
-        SET<Point2D> checkList = new SET<>();
-        checkList.add(start);
+
+        // manually run the first point
+
+        int firstNextY = 1;
+        int firstLeftX = s - 1;
+        int firstRightX = s + 1;
+        int firstMiddleX = s;
+
+        if (0 == edge)
+            return q;
+
+        if (firstLeftX >= 0) {
+            Point2D temp1 = new Point2D(firstLeftX, firstNextY);
+            sq.enqueue(temp1);
+            q.enqueue(temp1);
+        }
+
+        if (firstMiddleX >= 0 && firstMiddleX < width) {
+            Point2D temp1 = new Point2D(firstMiddleX, firstNextY);
+            sq.enqueue(temp1);
+            q.enqueue(temp1);
+        }
+
+        if (firstRightX < width) {
+            Point2D temp1 = new Point2D(firstRightX, firstNextY);
+            sq.enqueue(temp1);
+            q.enqueue(temp1);
+        }
+
+        previous = start;
 
         while (!sq.isEmpty()) {
             Point2D temp = sq.dequeue();
             int x = (int) temp.x();
             int y = (int) temp.y();
+            int previousX = (int) previous.x();
+            int previousY = (int) previous.y();
 
             if (y >= edge) { // detect the bottom edge
                 continue;
@@ -126,34 +149,37 @@ public class AcyclicSPForMatrix {
             int leftX = x - 1;
             int rightX = x + 1;
             int middleX = x;
-            boolean doNotSkip = true;
 
-            if (leftX >= 0) {
-                Point2D temp1 = new Point2D(leftX, nextY);
-                if (!checkList.contains(temp1)) {
+            if (previousY < y) { // previous point and temp point are in DIFFERENT row. 
+                                 // So try all points
+                if (leftX >= 0) {
+                    Point2D temp1 = new Point2D(leftX, nextY);
                     sq.enqueue(temp1);
                     q.enqueue(temp1);
-                    checkList.add(temp1);
-                } else {
-                    doNotSkip = false;
+                }
+
+                if (middleX >= 0 && middleX < width) {
+                    Point2D temp1 = new Point2D(middleX, nextY);
+                    sq.enqueue(temp1);
+                    q.enqueue(temp1);
+                }
+
+                if (rightX < width) {
+                    Point2D temp1 = new Point2D(rightX, nextY);
+                    sq.enqueue(temp1);
+                    q.enqueue(temp1);
+                }
+            } else { // previous point and temp point are in THE SAME row. 
+                     // So only try the right point, 
+                     // middle and left are already there.
+                if (rightX < width) {
+                    Point2D temp1 = new Point2D(rightX, nextY);
+                    sq.enqueue(temp1);
+                    q.enqueue(temp1);
                 }
             }
 
-            if (doNotSkip && middleX >= 0 && middleX < width) {
-                Point2D temp1 = new Point2D(middleX, nextY);
-                if (!checkList.contains(temp1)) {
-                    sq.enqueue(temp1);
-                    q.enqueue(temp1);
-                    checkList.add(temp1);
-                }
-            }
-
-            if (rightX < width) {
-                Point2D temp1 = new Point2D(rightX, nextY);
-                sq.enqueue(temp1);
-                q.enqueue(temp1);
-                checkList.add(temp1);
-            }
+            previous = temp; // set temp as previous point
         }
         return q;
     }

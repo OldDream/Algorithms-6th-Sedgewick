@@ -18,7 +18,6 @@ public class SeamFinder {
         int indexOfMin = 0;
         double minDist = distOfPaths[0];
         for (int i = 0; i < distOfPaths.length; i++) {
-            //StdOut.println("index = " + i + " path length = " + distOfPaths[i]);
             if (distOfPaths[i] < minDist) {
                 minDist = distOfPaths[i];
                 indexOfMin = i;
