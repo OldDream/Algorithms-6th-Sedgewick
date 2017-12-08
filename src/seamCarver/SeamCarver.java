@@ -16,6 +16,13 @@ public class SeamCarver {
 
     // current picture
     public Picture picture() {
+        Picture newPic = new Picture(width, height);
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                newPic.setRGB(x, y, pic.getRGB(x, y));
+            }
+        }
+        pic = newPic;
         return pic;
     }
 
@@ -48,7 +55,7 @@ public class SeamCarver {
         }
     }
     
- // sequence of indices for vertical seam
+    // sequence of indices for vertical seam
     public int[] findVerticalSeam() {
         renewEnergyMatrix();
         int[] seam = SeamFinder.findSeam(energyMatrix);
@@ -69,19 +76,41 @@ public class SeamCarver {
                 result[i][j] = eM[j][i];
             }
         }
-        
         return result;
     }
-
     
-    /*
+    // remove vertical seam from current picture
+    public void removeVerticalSeam(int[] seam) {
+        for (int y = 0; y < height(); y++) {
+            for (int x = seam[y]; x < width() - 1; x++) {
+                // when x >= seam[y], copy pixel from the right one
+                pic.setRGB(x, y, pic.getRGB(x + 1, y));
+            }
+        }
+        width--;
+    }
+    
     // remove horizontal seam from current picture
     public void removeHorizontalSeam(int[] seam) {
     }
-
-    // remove vertical seam from current picture
+    
+    
+/*    // low efficiency version
     public void removeVerticalSeam(int[] seam) {
-    }*/
+        Picture newPic = new Picture(width - 1, height);
+        for (int y = 0; y < newPic.height(); y++) {
+            for (int x = 0; x < newPic.width(); x++) {
+                if (x < seam[y]) {
+                    newPic.setRGB(x, y, pic.getRGB(x, y));
+                } else {  // x >= seam[y]
+                    newPic.setRGB(x, y, pic.getRGB(x + 1, y));
+                } 
+            }
+        }
+        pic = newPic;
+        width--;
+    }
+    */
     
    
 }
