@@ -2,6 +2,7 @@ package seamCarver;
 
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.algs4.Stack;
 
 public class AcyclicSPForMatrix {
@@ -109,16 +110,20 @@ public class AcyclicSPForMatrix {
 
     private Queue<Point2D> getToplogicalOrder(int s) {
         Queue<Point2D> q = new Queue<>();
-        Stack<Point2D> stack = new Stack<>();
+        Queue<Point2D> sq = new Queue<>();
+        
+        Point2D start = new Point2D(s, 0);
+        sq.enqueue(start);
+        q.enqueue(start);
+        SET<Point2D> checkList = new SET<>();
+        checkList.add(start);
 
-        stack.push(new Point2D(s, 0));
-        q.enqueue(new Point2D(s, 0));
-        while (!stack.isEmpty()) {
-            Point2D temp = stack.pop();
+        while (!sq.isEmpty()) {
+            Point2D temp = sq.dequeue();            
             int x = (int) temp.x();
             int y = (int) temp.y();
 
-            if (y == edge) { // detect the bottom edge
+            if (y >= edge) { // detect the bottom edge
                 continue;
             }
 
@@ -129,21 +134,31 @@ public class AcyclicSPForMatrix {
 
             if (leftX >= 0) {
                 Point2D temp1 = new Point2D(leftX, nextY);
-                stack.push(temp1);
-                q.enqueue(temp1);
+                if (!checkList.contains(temp1)) {
+                    sq.enqueue(temp1);
+                    q.enqueue(temp1);
+                    checkList.add(temp1);
+                }
             }
 
             if (middleX >= 0 && middleX < width) {
                 Point2D temp1 = new Point2D(middleX, nextY);
-                stack.push(temp1);
-                q.enqueue(temp1);
+                if (!checkList.contains(temp1)) {
+                    sq.enqueue(temp1);
+                    q.enqueue(temp1);
+                    checkList.add(temp1);
+                }
             }
 
             if (rightX < width) {
                 Point2D temp1 = new Point2D(rightX, nextY);
-                stack.push(temp1);
-                q.enqueue(temp1);
+                if (!checkList.contains(temp1)) {
+                    sq.enqueue(temp1);
+                    q.enqueue(temp1);
+                    checkList.add(temp1);
+                }
             }
+            
         }
         return q;
     }
