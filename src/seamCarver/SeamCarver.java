@@ -55,12 +55,26 @@ public class SeamCarver {
         return seam;
     }
 
-   /* // sequence of indices for horizontal seam
+    // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
+        renewEnergyMatrix();
+        int[] seam = SeamFinder.findSeam(transposeMatrix(energyMatrix));
+        return seam;
+    }
+    
+    private double[][] transposeMatrix(double[][] eM) {
+        double[][] result = new double[eM[0].length][eM.length];
+        for (int i = 0; i < result.length; i++) {
+            for (int j = 0; j < result[0].length; j++) {
+                result[i][j] = eM[j][i];
+            }
+        }
+        
+        return result;
     }
 
     
-
+    /*
     // remove horizontal seam from current picture
     public void removeHorizontalSeam(int[] seam) {
     }
