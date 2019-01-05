@@ -23,7 +23,7 @@ public class SeamFinder {
                 indexOfMin = i;
             }
         }
-        
+
         return savePaths[indexOfMin];
     }
 }

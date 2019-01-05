@@ -93,6 +93,7 @@ public class SeamCarver {
                 pic.setRGB(x, y, pic.getRGB(x + 1, y));
             }
         }
+
     }
 
     // remove horizontal seam from current picture
@@ -133,4 +134,5 @@ public class SeamCarver {
             }
         }
     }
+
 }
